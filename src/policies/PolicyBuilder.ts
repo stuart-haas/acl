@@ -3,18 +3,17 @@ import { PolicyActions } from ".";
 export interface Policies {
   [key: string]: string;
 }
-
 export class PolicyBuilder {
-  name: string;
-  policies: Policies= {};
+  resource: string;
+  policies: Policies = {};
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(resource: string) {
+    this.resource = resource;
   }
 
   build(...actions: PolicyActions[]) {
     actions.forEach((r: PolicyActions) => {
-      this.policies[r] = `${this.name}:${r}`;
+      this.policies[r] = `${this.resource}:${r}`;
     });
     return this;
   }

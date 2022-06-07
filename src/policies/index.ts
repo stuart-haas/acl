@@ -14,17 +14,36 @@ export enum PolicyActions {
   DELETE = 'DELETE'
 }
 
-export const Policies = [
+export interface Policy {
+  id: number;
+  effect: PolicyEffects,
+  action: PolicyActions,
+  resource: object;
+}
+
+export const Policies: Policy[] = [
   {
     id: 1,
     effect: PolicyEffects.ALLOW,
-    action: PolicyActions.CREATE,
+    action: PolicyActions.GET,
     resource: Post
   },
   {
     id: 2,
     effect: PolicyEffects.ALLOW,
     action: PolicyActions.CREATE,
+    resource: Post
+  },
+  {
+    id: 3,
+    effect: PolicyEffects.ALLOW,
+    action: PolicyActions.UPDATE,
+    resource: Post
+  },
+  {
+    id: 4,
+    effect: PolicyEffects.ALLOW,
+    action: PolicyActions.DELETE,
     resource: Post
   }
 ];
@@ -40,5 +59,13 @@ export const UserPolicies = [
   {
     userId: 1,
     policyId: 2,
+  },
+  {
+    userId: 1,
+    policyId: 3,
+  },
+  {
+    userId: 1,
+    policyId: 4,
   }
 ];
