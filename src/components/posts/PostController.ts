@@ -1,5 +1,6 @@
 import { injectable } from "tsyringe";
 import { Authorize } from "../../middleware";
+import { JsonResponse } from "../../middleware/Response";
 import { PolicyActions } from "../../policies";
 import { PostPolicies } from "./policies";
 
@@ -9,7 +10,8 @@ export class PostController {
   @Authorize(
     PostPolicies[PolicyActions.CREATE]
   )
-  create(req: any) {
-    
+  @JsonResponse()
+  create(req: any, res: any) {
+    return 'Hello World';
   }
 }

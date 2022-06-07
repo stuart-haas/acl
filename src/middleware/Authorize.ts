@@ -2,12 +2,13 @@ import { Policies, PolicyEffects, RolePolicies, UserPolicies } from "../policies
 
 export const Authorize = (...actions: string[]): MethodDecorator => {
   return (target, propertyKey, descriptor: PropertyDescriptor) => {
-    descriptor.value = async function (...args: any[]) {
+    const originalMethod = descriptor.value;
+    descriptor.value = function (...args: any[]) {
+      originalMethod.apply(this, args);
 
       let authorized = false;
 
-      const { req } = args[0];
-      const { user } = req;
+      const { user } = args[0];
 
       const rolePolcies = RolePolicies.map((a: any) => {
         return { ...a, policy: Policies.find((b: any) => b.id === a.policyId && b.effect === PolicyEffects.ALLOW) }
@@ -19,32 +20,6 @@ export const Authorize = (...actions: string[]): MethodDecorator => {
 
       authorized = !!rolePolcies.length
       authorized = !!userPolicies.length;
-
-      const formattedRolePolicies = rolePolcies.map((r: any) => {
-        const d = {
-          ...r,
-          effect: r.policy.effect,
-          action: r.policy.action,
-          resource: r.policy.resource,
-        }
-        delete d.policy;
-        return d;
-      });
-
-      const formattedUserPolicies = userPolicies.map((r: any) => {
-        const d = {
-          ...r,
-          effect: r.policy.effect,
-          action: r.policy.action,
-          resource: r.policy.resource,
-        }
-        delete d.policy;
-        return d;
-      });
-
-      console.table(actions);
-      console.table(formattedRolePolicies);
-      console.table(formattedUserPolicies);
 
       if(authorized) {
         return console.log('User is authorized to access resource');
